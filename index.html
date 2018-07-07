@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<head>
+    <title>jQuery Complete Course</title>
+</head>
+
+<body>
+    <h1>Guess the Lock combo</h1>
+    <div id="start" class="btn">Start</div>
+    
+    <div id="output">
+        <small>Message</small>
+        <input type="number" name="lock1" min="0" max="9">
+        <input type="number" name="lock2" min="0" max="9">
+        <input type="number" name="lock3" min="0" max="9">
+        <div class="btn" id="checkLock">Open Lock &#128274</div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script>
+        $(function () {
+            $('#output').hide();
+            $('#start').click(startGame);
+            $('#checkLock').click(openLock)
+            var ourSecretNum = '';
+            var counter = 0
+            function openLock(){
+                counter++;
+                console.log(counter);
+                var win = 0;
+                for (x=0;x<$('input[type="number"]').length;x++){
+                    var guessNumber = $('input[type="number"]').eq(x);
+                    var result = checkNumber(guessNumber.val(), ourSecretNum[x]);
+                    guessNumber.css({
+                        backgroundColor:result.backgrd
+                    })
+                    if (result.checker){
+                        win++
+                    }
+                }
+                if (counter>4){
+                    $('small').html('Out of guesses, try again');
+                    counter = 0;
+                    $('#start').show();
+                    
+                }
+                if (win==3){
+                    $('#start').show();
+                    $('small').html('you got it<br>'+ourSecretNum)
+                }
+            }           
+            
+            function checkNumber(a,b){
+                var response = {};
+                if (a<b){
+                    response.checker = false;
+                    response.backgrd = 'red';
+                }
+                if (a>b){
+                    response.checker = false;
+                    response.backgrd = 'blue';
+                    }
+                if (a==b){
+                    response.checker = true;
+                    response.backgrd = 'green';
+                }
+                return response;
+            }
+            
+            function startGame(){
+                ourSecretNum = Math.floor(Math.random()*(999-100+1)+100).toString();// generate random 3 digit number
+                console.log(ourSecretNum);
+                $('#start').hide();// hides the start button 
+                $('#output').show();// opens the lock game
+                for (x=0; x<$('input[type="number"]').length; x++){
+                    $('input[type="number"]').eq(x).val('5');
+                    // sets all values to 5
+                }
+                $('small').html('Red means guess is low, blue means guess is high. You have 5 guesses before the number resets');
+            }
+            $('h1').css({
+                textAlign:'center'                
+                
+            })
+            $('input[type="number"]').css({
+                color: 'white',
+                fontsize: '3em',
+                width: '60px',
+                border: '1px solid black',
+                backgroundColor: 'black'
+            })
+            $('.btn').css({
+                backgroundColor: 'black',
+                color: 'white',
+                width: '160px',
+                fontSize: '1.5em',
+                padding: '15px',
+                margin: '25px auto 0px',
+                border: '1px solid yellow',
+                textAlign: 'center'
+            })
+            $('#output').css({
+                backgroundColor: '#333',
+                width:'300px',
+                padding: '15px',
+                border: '1px solid yellow',
+                textAlign: 'center',
+                margin:'auto'  //centres div to page
+            })
+            $('small').css({
+                color: 'white',
+                fontSize: '1em',
+                padding: '15px',
+                marginBottom: '15px',
+                display:'block'
+            })
+        })
+    </script>
+</body>
